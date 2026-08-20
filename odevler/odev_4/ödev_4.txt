@@ -1,0 +1,275 @@
+FastAPI - Pydantic - SQLAlchemy
+
+==================================================
+SORU 1 - ÜRÜN KAYIT SİSTEMİ
+==================================================
+
+Bir Product API geliştirin.
+
+1. ProductCreateDto adında bir Pydantic DTO oluşturun.
+
+DTO alanları:
+- name: str
+- price: float
+- stock: int
+- category: str
+
+2. SQLAlchemy kullanarak Product modelini oluşturun.
+
+Model alanları:
+- id
+- name
+- price
+- stock
+- category
+- created_at
+
+3. Product kaydeden bir service fonksiyonu oluşturun.
+
+4. Aynı isimde ikinci bir ürünün kaydedilmesini engelleyin.
+
+5. /products POST endpoint'ini oluşturun.
+
+Başarılı kayıt sonucunda aşağıdaki bilgileri döndürün:
+
+{
+    "message": "Product created successfully",
+    "product_id": 1
+}
+
+Aynı isimde ürün varsa:
+
+{
+    "message": "Product already exists"
+}
+
+
+==================================================
+SORU 2 - ÖĞRENCİ KAYIT VE SORGULAMA SİSTEMİ
+==================================================
+
+Bir Student API geliştirin.
+
+1. StudentCreateDto adında bir Pydantic DTO oluşturun.
+
+DTO alanları:
+- name: str
+- email: str
+- department: str
+
+2. SQLAlchemy kullanarak Student modelini oluşturun.
+
+Model alanları:
+- id
+- name
+- email
+- department
+- created_at
+
+3. email alanı unique olmalıdır.
+
+4. Öğrenci kaydı yapan bir service fonksiyonu oluşturun.
+
+5. Email adresine göre tek bir öğrenci getiren
+get_student_by_email() fonksiyonunu oluşturun.
+
+6. Aşağıdaki endpoint'leri oluşturun:
+
+POST /students/register
+GET /students/{email}
+
+7. Öğrenci bulunamazsa aşağıdaki cevabı döndürün:
+
+{
+    "message": "Student not found"
+}
+
+8. Aynı email ile kayıt yapılmaya çalışılırsa uygulama hata
+vermemeli ve aşağıdaki cevabı döndürmelidir:
+
+{
+    "message": "Email already exists"
+}
+
+
+==================================================
+SORU 3 - KİTAP KÜTÜPHANESİ API
+==================================================
+
+Bir Library API geliştirin.
+
+1. BookCreateDto adında bir Pydantic DTO oluşturun.
+
+DTO alanları:
+- title: str
+- author: str
+- isbn: str
+- price: float
+
+2. SQLAlchemy kullanarak Book modelini oluşturun.
+
+Model alanları:
+- id
+- title
+- author
+- isbn
+- price
+- created_at
+
+3. ISBN alanı unique olmalıdır.
+
+4. Yeni kitap ekleyen bir service fonksiyonu oluşturun.
+
+5. ISBN numarasına göre kitap arayan bir service fonksiyonu
+oluşturun.
+
+6. Tüm kitapları getiren bir service fonksiyonu oluşturun.
+
+7. Aşağıdaki endpoint'leri oluşturun:
+
+POST /books
+GET /books
+GET /books/{isbn}
+
+8. GET /books endpoint'inde SQLAlchemy select(Book)
+kullanarak tüm kitapları getirin.
+
+9. ISBN bulunamazsa aşağıdaki cevabı döndürün:
+
+{
+    "message": "Book not found"
+}
+
+10. Aynı ISBN ile ikinci bir kitap kaydedilmesini engelleyin.
+
+
+==================================================
+SORU 4 - ÇALIŞAN KAYIT SİSTEMİ
+==================================================
+
+Bir şirket için Employee API geliştirin.
+
+1. EmployeeCreateDto adında bir Pydantic DTO oluşturun.
+
+DTO alanları:
+- name: str
+- email: str
+- salary: float
+- department: str
+
+2. SQLAlchemy kullanarak Employee modelini oluşturun.
+
+Model alanları:
+- id
+- name
+- email
+- salary
+- department
+- created_at
+
+3. email alanı unique olmalıdır.
+
+4. Yeni çalışan kaydı oluşturan bir service fonksiyonu
+oluşturun.
+
+5. Email adresine göre çalışan getiren bir service
+fonksiyonu oluşturun.
+
+6. Department bilgisine göre çalışanları getiren bir
+service fonksiyonu oluşturun.
+
+7. Aşağıdaki endpoint'leri oluşturun:
+
+POST /employees
+GET /employees/{email}
+GET /employees/department/{department}
+
+8. Örneğin:
+
+GET /employees/department/Software
+
+isteği yapıldığında Software departmanındaki tüm çalışanlar
+döndürülmelidir.
+
+9. Salary değeri 0'dan küçük olamaz.
+
+10. Aynı email ile ikinci bir çalışan kaydedilmesini engelleyin.
+
+
+==================================================
+SORU 5 - SİPARİŞ KAYIT SİSTEMİ
+==================================================
+
+Bir Order API geliştirin.
+
+1. OrderCreateDto adında bir Pydantic DTO oluşturun.
+
+DTO alanları:
+- customer_name: str
+- product_name: str
+- quantity: int
+- unit_price: float
+
+2. SQLAlchemy kullanarak Order modelini oluşturun.
+
+Model alanları:
+- id
+- customer_name
+- product_name
+- quantity
+- unit_price
+- created_at
+
+3. Yeni sipariş oluşturan bir service fonksiyonu oluşturun.
+
+4. Siparişleri listeleyen bir service fonksiyonu oluşturun.
+
+5. ID değerine göre sipariş getiren bir service fonksiyonu
+oluşturun.
+
+6. Aşağıdaki endpoint'leri oluşturun:
+
+POST /orders
+GET /orders
+GET /orders/{id}
+
+7. Sipariş oluşturulduğunda toplam tutarı hesaplayın.
+
+total_price = quantity * unit_price
+
+8. Başarılı sipariş oluşturulduğunda aşağıdaki yapıya benzer
+bir cevap döndürün:
+
+{
+    "message": "Order created successfully",
+    "order_id": 15,
+    "total_price": 1250.0
+}
+
+9. Quantity değeri 0 veya negatif olamaz.
+
+10. Unit_price değeri 0 veya negatif olamaz.
+
+11. ID ile sipariş bulunamazsa aşağıdaki cevabı döndürün:
+
+{
+    "message": "Order not found"
+}
+
+
+==================================================
+GENEL KURALLAR
+==================================================
+
+- Pydantic DTO kullanılmalıdır.
+- SQLAlchemy ORM kullanılmalıdır.
+- Veritabanı işlemleri service katmanında yapılmalıdır.
+- FastAPI Router kullanılmalıdır.
+- SessionLocal üzerinden veritabanı bağlantısı kurulmalıdır.
+- SQLAlchemy select() kullanılması gereken yerlerde select()
+  kullanılmalıdır.
+- Hatalar kontrol edilmeli ve kullanıcıya uygun mesaj
+  döndürülmelidir.
+- Kod mümkün olduğunca katmanlı ve düzenli hazırlanmalıdır.
+- Model, DTO, Service ve Router yapıları ayrı dosyalarda
+  oluşturulmalıdır.
