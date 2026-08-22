@@ -1,0 +1,224 @@
+Her soruda mümkün olduğunca mevcut projedeki katmanlı yapıya uygun olarak DTO, Service ve Router yapılarını kullanınız.
+
+==================================================
+SORU 1 – CUSTOMER ARAMA
+=======================
+
+Bir müşterinin ID bilgisine göre veritabanından bulunmasını sağlayan bir servis fonksiyonu yazınız.
+
+İstenenler:
+
+* customer_get_by_id(id: int) isimli bir fonksiyon oluşturunuz.
+* SQLAlchemy SessionLocal kullanınız.
+* Customer tablosunda verilen ID'ye sahip müşteriyi arayınız.
+* Müşteri bulunursa Customer nesnesini döndürünüz.
+* Müşteri bulunamazsa None döndürünüz.
+* Fonksiyonun veritabanı sorgusunu SQLAlchemy select() kullanarak gerçekleştiriniz.
+
+Ayrıca aşağıdaki endpoint'i oluşturunuz:
+
+GET /customer/{id}
+
+Müşteri bulunursa:
+
+{
+"message": "Customer found",
+"customer": ...
+}
+
+Müşteri bulunamazsa HTTP 404 döndürünüz ve:
+
+{
+"message": "Customer not found"
+}
+
+==================================================
+SORU 2 – CUSTOMER DELETE
+========================
+
+Bir müşterinin ID bilgisine göre silinmesini sağlayan bir servis ve API endpoint'i yazınız.
+
+İstenenler:
+
+* customer_delete(id: int) isimli bir servis fonksiyonu oluşturunuz.
+* SessionLocal kullanınız.
+* session.get(Customer, id) ile müşteriyi bulunuz.
+* Müşteri bulunamazsa None döndürünüz.
+* Müşteri bulunursa session.delete() kullanarak siliniz.
+* Değişikliği session.commit() ile veritabanına kaydediniz.
+* Başarılı işlem sonucunda silinen Customer nesnesini döndürünüz.
+
+Aşağıdaki endpoint'i oluşturunuz:
+
+DELETE /customer/{id}
+
+Başarılı durumda:
+
+{
+"message": "Customer deleted successfully",
+"customer_id": 10
+}
+
+Müşteri bulunamazsa HTTP 404 döndürünüz.
+
+==================================================
+SORU 3 – CUSTOMER EMAIL DEĞİŞTİRME
+==================================
+
+Mevcut bir müşterinin sadece email adresini değiştiren bir API geliştiriniz.
+
+Bunun için aşağıdaki DTO'yu oluşturunuz:
+
+class CustomerEmailUpdateDto(BaseModel):
+email: str
+
+Daha sonra:
+
+customer_update_email(id: int, customerEmailDto: CustomerEmailUpdateDto)
+
+isimli bir servis fonksiyonu oluşturunuz.
+
+İstenenler:
+
+* ID bilgisine göre müşteriyi bulunuz.
+* Müşteri bulunamazsa None döndürünüz.
+* Yeni email adresinin başka bir müşteri tarafından kullanılıp kullanılmadığını kontrol ediniz.
+* Email başka bir müşteriye aitse güncelleme yapmayınız.
+* Email kullanılmıyorsa müşterinin email bilgisini güncelleyiniz.
+* session.commit() kullanınız.
+* session.refresh() kullanınız.
+
+Aşağıdaki endpoint'i oluşturunuz:
+
+PUT /customer/email/{id}
+
+Başarılı durumda:
+
+{
+"message": "Email updated successfully",
+"customer": ...
+}
+
+Müşteri bulunamazsa:
+
+HTTP 404
+
+Email başka bir müşteri tarafından kullanılıyorsa:
+
+HTTP 400
+
+ve:
+
+{
+"message": "Email already exists."
+}
+
+==================================================
+SORU 4 – CUSTOMER LİSTELEME
+===========================
+
+Veritabanında bulunan tüm müşterileri getiren bir servis ve API endpoint'i yazınız.
+
+Aşağıdaki servis fonksiyonunu oluşturunuz:
+
+get_all_customers()
+
+İstenenler:
+
+* SessionLocal kullanınız.
+* SQLAlchemy select(Customer) sorgusu oluşturunuz.
+* session.scalars() veya uygun SQLAlchemy yöntemiyle tüm müşterileri elde ediniz.
+* Müşteri listesini döndürünüz.
+* Hiç müşteri bulunmuyorsa boş liste döndürünüz.
+
+Aşağıdaki endpoint'i oluşturunuz:
+
+GET /customers
+
+Başarılı durumda aşağıdakine benzer bir JSON response döndürünüz:
+
+{
+"message": "Customers retrieved successfully",
+"customers": [...]
+}
+
+NOT:
+
+Şifre bilgilerinin API response içerisinde gösterilmemesine dikkat ediniz.
+
+Bunun için gerekirse response DTO'su oluşturunuz.
+
+==================================================
+SORU 5 – CUSTOMER PASSWORD GÜNCELLEME
+=====================================
+
+Bir müşterinin mevcut şifresini kontrol ederek yeni şifresini değiştiren bir API geliştiriniz.
+
+Aşağıdaki DTO'yu oluşturunuz:
+
+class CustomerPasswordUpdateDto(BaseModel):
+old_password: str
+new_password: str
+
+Aşağıdaki servis fonksiyonunu oluşturunuz:
+
+customer_update_password(
+id: int,
+customerPasswordDto: CustomerPasswordUpdateDto
+)
+
+İstenenler:
+
+1. ID bilgisine göre müşteriyi bulunuz.
+
+2. Müşteri bulunamazsa None döndürünüz.
+
+3. Gönderilen old_password ile veritabanındaki mevcut password bilgisini karşılaştırınız.
+
+4. Eski şifre yanlışsa şifre değişikliğine izin vermeyiniz.
+
+5. Eski şifre doğruysa password alanını new_password ile değiştiriniz.
+
+6. session.commit() kullanınız.
+
+7. session.refresh() kullanınız.
+
+8. Başarılı işlem sonucunda güncellenmiş Customer nesnesini döndürünüz.
+
+Aşağıdaki endpoint'i oluşturunuz:
+
+PUT /customer/password/{id}
+
+Başarılı durumda:
+
+{
+"message": "Password updated successfully",
+"customer": ...
+}
+
+Müşteri bulunamazsa:
+
+HTTP 404
+
+Eski şifre yanlışsa:
+
+HTTP 400
+
+ve:
+
+{
+"message": "Old password is incorrect."
+}
+
+# GENEL KURALLAR
+
+* Kodları Python ile yazınız.
+* FastAPI kullanınız.
+* SQLAlchemy kullanınız.
+* Veritabanı işlemlerinde SessionLocal kullanınız.
+* İş mantığını mümkün olduğunca service katmanında gerçekleştiriniz.
+* API endpoint'lerini Router katmanında oluşturunuz.
+* DTO gereken yerlerde Pydantic BaseModel kullanınız.
+* Başarılı ve başarısız durumları uygun HTTP status kodlarıyla yönetiniz.
+* Kod içerisinde try/except kullanımını gerekli gördüğünüz yerlerde uygulayınız.
+* Hazır olarak verilen fonksiyonları doğrudan kopyalamak yerine sorunun gerektirdiği kodu kendiniz yazınız.
